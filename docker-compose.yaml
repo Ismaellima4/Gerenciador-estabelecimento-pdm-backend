@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:15
-    container_name: postgtes_pdm
+    container_name: postgres_pdm
     restart: always
     ports:
       - '5432:5432'
