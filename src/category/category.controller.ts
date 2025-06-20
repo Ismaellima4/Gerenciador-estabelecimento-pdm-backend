@@ -25,21 +25,21 @@ export class CategoryController {
     return this.categoriaService.findAll();
   }
 
-  @Get(':name')
-  findOne(@Param('name') name: string) {
-    return this.categoriaService.findOne(name);
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.categoriaService.findOne(id);
   }
 
-  @Patch(':name')
+  @Patch(':id')
   update(
-    @Param('name') name: string,
+    @Param('id') id: string,
     @Body() updateCategoriaDto: UpdateCategoriaDto,
   ) {
-    return this.categoriaService.update(name, updateCategoriaDto);
+    return this.categoriaService.update(id, updateCategoriaDto);
   }
 
-  @Delete(':name')
-  remove(@Param('name') name: string) {
-    return this.categoriaService.remove(name);
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.categoriaService.remove(id);
   }
 }
