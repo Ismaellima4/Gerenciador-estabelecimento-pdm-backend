@@ -1,6 +1,5 @@
 import {
   IsDate,
-  IsEmpty,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -30,7 +29,7 @@ export class CreateProductDto {
   @Type(() => Date)
   expirationDate: Date;
   @IsString()
-  @IsEmpty()
+  @IsNotEmpty()
   @IsOptional()
   barCode?: string;
   @IsDate()
