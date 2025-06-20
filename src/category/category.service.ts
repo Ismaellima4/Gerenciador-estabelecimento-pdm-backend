@@ -27,6 +27,11 @@ export class CategoryService {
   }
 
   async findOne(name: string): Promise<CategoryResponseDTO> {
+    const category = await this.findOneEntity(name);
+    return new CategoryResponseDTO(category);
+  }
+
+  async findOneEntity(name: string): Promise<Category> {
     const category = await this.categoriaRepository.findOne({
       where: { name },
     });
@@ -35,18 +40,11 @@ export class CategoryService {
         `Categoria não encontrada com o nome de ${name}`,
       );
     }
-    return new CategoryResponseDTO(category);
+    return category;
   }
 
   async update(name: string, updateCategoriaDto: UpdateCategoriaDto) {
-    const categoryUpdating = await this.categoriaRepository.findOne({
-      where: { name },
-    });
-    if (!categoryUpdating) {
-      throw new NotFoundException(
-        `Categoria não encontrada com o nome de ${name}`,
-      );
-    }
+    const categoryUpdating = await this.findOneEntity(name);
     Object.assign(categoryUpdating, updateCategoriaDto);
     const category = await this.categoriaRepository.save(categoryUpdating);
     return new CategoryResponseDTO(category);
