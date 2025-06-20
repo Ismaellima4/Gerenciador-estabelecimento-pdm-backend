@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoriaDto } from './dto/create-category.dto';
 import { UpdateCategoriaDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
 import { Repository } from 'typeorm';
+import { CategoryResponseDTO } from './dto/category-response.dto';
 
 @Injectable()
 export class CategoryService {
@@ -11,23 +12,47 @@ export class CategoryService {
     @InjectRepository(Category)
     private readonly categoriaRepository: Repository<Category>,
   ) {}
-  create(createCategoriaDto: CreateCategoriaDto) {
-    return this.categoriaRepository.save({ name: createCategoriaDto.name });
+  async create(
+    createCategoriaDto: CreateCategoriaDto,
+  ): Promise<CategoryResponseDTO> {
+    const category: Category = await this.categoriaRepository.save({
+      name: createCategoriaDto.name,
+    });
+    return new CategoryResponseDTO(category);
   }
 
-  findAll() {
-    return this.categoriaRepository.find();
+  async findAll(): Promise<CategoryResponseDTO[]> {
+    const categories = await this.categoriaRepository.find();
+    return categories.map((category) => new CategoryResponseDTO(category));
   }
 
-  findOne(name: string) {
-    return this.categoriaRepository.findOne({ where: { name } });
+  async findOne(name: string): Promise<CategoryResponseDTO> {
+    const category = await this.categoriaRepository.findOne({
+      where: { name },
+    });
+    if (!category) {
+      throw new NotFoundException(
+        `Categoria não encontrada com o nome de ${name}`,
+      );
+    }
+    return new CategoryResponseDTO(category);
   }
 
-  update(name: string, updateCategoriaDto: UpdateCategoriaDto) {
-    return this.categoriaRepository.update(name, updateCategoriaDto);
+  async update(name: string, updateCategoriaDto: UpdateCategoriaDto) {
+    const categoryUpdating = await this.categoriaRepository.findOne({
+      where: { name },
+    });
+    if (!categoryUpdating) {
+      throw new NotFoundException(
+        `Categoria não encontrada com o nome de ${name}`,
+      );
+    }
+    Object.assign(categoryUpdating, updateCategoriaDto);
+    const category = await this.categoriaRepository.save(categoryUpdating);
+    return new CategoryResponseDTO(category);
   }
 
-  remove(name: string) {
+  async remove(name: string) {
     return this.categoriaRepository.delete(name);
   }
 }
