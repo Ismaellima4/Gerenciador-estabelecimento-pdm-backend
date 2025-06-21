@@ -1,5 +1,12 @@
 import { Category } from 'src/category/entities/category.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Supplier } from 'src/supplier/entities/supplier.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('products')
 export class Product {
@@ -11,8 +18,6 @@ export class Product {
   description: string;
   @Column()
   price: number;
-  @ManyToOne(() => Category, (category) => category.products)
-  category: Category;
   @Column()
   amount: number;
   @Column({ type: 'date' })
@@ -21,6 +26,10 @@ export class Product {
   barCode: string;
   @Column({ type: 'date' })
   manufacturingDate: Date;
-  @Column()
-  supplier: string;
+  @ManyToOne(() => Category, (category) => category.products)
+  @JoinColumn()
+  category: Category;
+  @ManyToOne(() => Supplier, (supplier) => supplier.products)
+  @JoinColumn()
+  supplier: Supplier;
 }

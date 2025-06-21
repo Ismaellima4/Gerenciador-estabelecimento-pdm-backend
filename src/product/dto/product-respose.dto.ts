@@ -1,5 +1,6 @@
 import { CategoryResponseDTO } from 'src/category/dto/category-response.dto';
 import { Product } from '../entities/product.entity';
+import { SupplierResposeDTO } from 'src/supplier/dto/supplier-response.dto';
 
 export class ProductResposeDTO {
   id: string;
@@ -11,7 +12,7 @@ export class ProductResposeDTO {
   expirationDate: Date;
   barCode?: string;
   manufacturingDate: Date;
-  supplier: string;
+  supplier: SupplierResposeDTO;
 
   constructor(product: Product) {
     this.id = product.id;
@@ -23,6 +24,6 @@ export class ProductResposeDTO {
     this.expirationDate = product.expirationDate;
     this.barCode = product.barCode;
     this.manufacturingDate = product.manufacturingDate;
-    this.supplier = product.supplier;
+    this.supplier = new SupplierResposeDTO(product.supplier);
   }
 }

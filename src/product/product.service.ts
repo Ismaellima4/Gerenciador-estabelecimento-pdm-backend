@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryService } from 'src/category/category.service';
+import { SupplierService } from 'src/supplier/supplier.service';
 
 @Injectable()
 export class ProductService {
@@ -13,14 +14,19 @@ export class ProductService {
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
     private readonly categoryService: CategoryService,
+    private readonly supplierService: SupplierService,
   ) {}
   async create(createProductDto: CreateProductDto): Promise<ProductResposeDTO> {
     const category = await this.categoryService.findOneEntity(
       createProductDto.category,
     );
+    const supplier = await this.supplierService.findOneEntity(
+      createProductDto.supplier,
+    );
     const product = this.productRepository.create({
       ...createProductDto,
       category,
+      supplier,
     });
 
     const productSaved = await this.productRepository.save(product);
