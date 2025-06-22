@@ -6,6 +6,10 @@ import { ProductModule } from './product/product.module';
 import { Product } from './product/entities/product.entity';
 import { SupplierModule } from './supplier/supplier.module';
 import { Supplier } from './supplier/entities/supplier.entity';
+import { OrderItemModule } from './order-item/order-item.module';
+import { OrderModule } from './order/order.module';
+import { PaymentModule } from './payment/payment.module';
+import { CustomerModule } from './customer/customer.module';
 
 @Module({
   imports: [
@@ -22,6 +26,10 @@ import { Supplier } from './supplier/entities/supplier.entity';
     CategoryModule,
     ProductModule,
     SupplierModule,
+    OrderItemModule,
+    OrderModule,
+    PaymentModule,
+    CustomerModule,
   ],
 })
 export class AppModule {}
