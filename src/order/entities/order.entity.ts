@@ -12,8 +12,8 @@ import { OrderStatus } from 'src/enum/order-status.enum';
 
 @Entity('orders')
 export class Order {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @OneToMany(() => OrderItem, (item) => item.order, {
     cascade: true,

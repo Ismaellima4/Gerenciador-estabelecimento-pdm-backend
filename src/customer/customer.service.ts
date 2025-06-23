@@ -28,11 +28,11 @@ export class CustomerService {
   }
 
   async findOne(id: string): Promise<CustomerRespondeDTO> {
-    const customer = await this.findneEntity(id);
+    const customer = await this.findOneEntity(id);
     return new CustomerRespondeDTO(customer);
   }
 
-  async findneEntity(id: string): Promise<Customer> {
+  async findOneEntity(id: string): Promise<Customer> {
     const customer = await this.customerRepository.findOne({ where: { id } });
     if (!customer) {
       throw new NotFoundException(`Cliente não encontrado com o id`);
@@ -45,7 +45,7 @@ export class CustomerService {
     id: string,
     updateCustomerDto: UpdateCustomerDto,
   ): Promise<CustomerRespondeDTO> {
-    const customerUpdating = await this.findneEntity(id);
+    const customerUpdating = await this.findOneEntity(id);
     Object.assign(customerUpdating, updateCustomerDto);
     const customerSaved = await this.customerRepository.save(customerUpdating);
     return new CustomerRespondeDTO(customerSaved);
