@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductResposeDTO } from './dto/product-respose.dto';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryService } from 'src/category/category.service';
@@ -55,6 +55,14 @@ export class ProductService {
       throw new NotFoundException(`Produto não encontrado com o id ${id}}`);
     }
     return product;
+  }
+
+  async findAllById(ids: string[]): Promise<ProductResposeDTO[]> {
+    const products = await this.productRepository.find({
+      where: { id: In(ids) },
+      relations: ['category'],
+    });
+    return products.map((product) => new ProductResposeDTO(product));
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {

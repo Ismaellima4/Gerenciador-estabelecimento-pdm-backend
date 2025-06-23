@@ -10,8 +10,8 @@ import { Product } from 'src/product/entities/product.entity';
 
 @Entity('order_items')
 export class OrderItem {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => Order, (order) => order.orderItems, {
     onDelete: 'CASCADE',
