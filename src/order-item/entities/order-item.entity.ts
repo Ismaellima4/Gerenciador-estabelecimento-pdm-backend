@@ -30,4 +30,3 @@ export class OrderItem {
   @Column({ type: 'int', nullable: false })
   quantity: number;
 }
-

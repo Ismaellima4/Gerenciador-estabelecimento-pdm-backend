@@ -11,4 +11,3 @@ import { CustomerController } from './customer.controller';
   exports: [CustomerService],
 })
 export class CustomerModule {}
-

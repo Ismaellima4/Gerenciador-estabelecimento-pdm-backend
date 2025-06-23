@@ -3,19 +3,16 @@ import { Payment } from 'src/payment/entities/payment.entity';
 
 @Entity('customers')
 export class Customer {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
   @Column({ length: 60 })
   name: string;
-
   @Column({ unique: true })
   cpf: string;
-
-  @Column('simple-array', { unique: false })
-  contacts: string[];
-
+  @Column({ nullable: true })
+  phoneNumber: string;
+  @Column({ nullable: true, unique: true })
+  email: string;
   @OneToMany(() => Payment, (payment) => payment.customer)
   payments: Payment[];
 }
-

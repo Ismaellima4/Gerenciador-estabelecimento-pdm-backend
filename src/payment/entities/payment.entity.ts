@@ -7,7 +7,6 @@ import {
   JoinColumn,
   BeforeUpdate,
   BeforeInsert,
- 
 } from 'typeorm';
 import { Order } from 'src/order/entities/order.entity';
 import { Customer } from 'src/customer/entities/customer.entity';
@@ -59,6 +58,4 @@ export class Payment {
       this.amount = 0;
     }
   }
-
 }
-

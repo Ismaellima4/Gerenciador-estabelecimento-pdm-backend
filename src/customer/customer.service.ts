@@ -1,26 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { CustomerRespondeDTO } from './dto/customer-response.dto';
+import { Repository } from 'typeorm';
+import { Customer } from './entities/customer.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class CustomerService {
-  create(createCustomerDto: CreateCustomerDto) {
-    return 'This action adds a new customer';
+  constructor(
+    @InjectRepository(Customer)
+    private readonly customerRepository: Repository<Customer>,
+  ) {}
+  async create(
+    createCustomerDto: CreateCustomerDto,
+  ): Promise<CustomerRespondeDTO> {
+    const customer = this.customerRepository.create(createCustomerDto);
+    const customerSaved = await this.customerRepository.save(customer);
+    return new CustomerRespondeDTO(customerSaved);
   }
 
-  findAll() {
-    return `This action returns all customer`;
+  async findAll(): Promise<CustomerRespondeDTO[]> {
+    const customers = await this.customerRepository.find({
+      relations: ['payments'],
+    });
+    return customers.map((customer) => new CustomerRespondeDTO(customer));
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} customer`;
+  async findOne(id: string): Promise<CustomerRespondeDTO> {
+    const customer = await this.findneEntity(id);
+    return new CustomerRespondeDTO(customer);
   }
 
-  update(id: number, updateCustomerDto: UpdateCustomerDto) {
-    return `This action updates a #${id} customer`;
+  async findneEntity(id: string): Promise<Customer> {
+    const customer = await this.customerRepository.findOne({ where: { id } });
+    if (!customer) {
+      throw new NotFoundException(`Cliente não encontrado com o id`);
+    }
+
+    return customer;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} customer`;
+  async update(
+    id: string,
+    updateCustomerDto: UpdateCustomerDto,
+  ): Promise<CustomerRespondeDTO> {
+    const customerUpdating = await this.findneEntity(id);
+    Object.assign(customerUpdating, updateCustomerDto);
+    const customerSaved = await this.customerRepository.save(customerUpdating);
+    return new CustomerRespondeDTO(customerSaved);
+  }
+
+  async remove(id: string) {
+    return this.customerRepository.delete(id);
   }
 }

@@ -12,4 +12,3 @@ import { OrderController } from './order.controller';
   exports: [OrderService],
 })
 export class OrderModule {}
-
