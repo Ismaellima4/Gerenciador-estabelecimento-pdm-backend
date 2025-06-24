@@ -1,4 +1,5 @@
-import { ArrayMinSize, IsArray, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { ArrayMinSize, IsArray, ValidateNested } from 'class-validator';
 import { CreateOrderItemDto } from 'src/order-item/dto/create-order-item.dto';
 
 export class CreateOrderDto {
@@ -6,6 +7,7 @@ export class CreateOrderDto {
   @ArrayMinSize(1, {
     message: 'deve conter pelo menos 1 item na compra',
   })
-  @IsString({ each: true })
+  @ValidateNested({ each: true }) // Valida cada item com as regras do DTO
+  @Type(() => CreateOrderItemDto) 
   orderItems: CreateOrderItemDto[];
 }

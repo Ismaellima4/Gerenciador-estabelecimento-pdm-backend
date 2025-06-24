@@ -1,11 +1,4 @@
-import {
-  IsNegative,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  IsUUID,
-  Min,
-} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsUUID, Min } from 'class-validator';
 
 export class CreateOrderItemDto {
   @IsString()
@@ -13,7 +6,6 @@ export class CreateOrderItemDto {
   @IsUUID()
   productID: string;
   @IsNumber()
-  @IsNegative()
   @IsNotEmpty()
   @Min(1)
   quantity: number;

@@ -18,10 +18,7 @@ export class Payment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Order, (order) => order.payment, {
-    cascade: true,
-    eager: true,
-  })
+  @OneToOne(() => Order, (order) => order.payment)
   @JoinColumn()
   order: Order;
 

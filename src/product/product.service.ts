@@ -36,7 +36,7 @@ export class ProductService {
 
   async findAll(): Promise<ProductResposeDTO[]> {
     const products = await this.productRepository.find({
-      relations: ['category'],
+      relations: ['category', 'supplier'],
     });
     return products.map((product) => new ProductResposeDTO(product));
   }
@@ -49,7 +49,7 @@ export class ProductService {
   async findOneEntity(id: string): Promise<Product> {
     const product = await this.productRepository.findOne({
       where: { id },
-      relations: ['category'],
+      relations: ['category', 'supplier'],
     });
     if (!product) {
       throw new NotFoundException(`Produto não encontrado com o id ${id}}`);
@@ -60,7 +60,7 @@ export class ProductService {
   async findAllById(ids: string[]): Promise<ProductResposeDTO[]> {
     const products = await this.productRepository.find({
       where: { id: In(ids) },
-      relations: ['category'],
+      relations: ['category', 'supplier'],
     });
     return products.map((product) => new ProductResposeDTO(product));
   }
