@@ -25,9 +25,10 @@ export class OrderService {
     if (orderItems.length < 1) {
       throw new BadRequestException('Nenhum produto encontrado !');
     }
-    const orderSaved = await this.orderRepository.save({
-      orderItems: orderItems,
+    const order = this.orderRepository.create({
+      orderItems,
     });
+    const orderSaved = await this.orderRepository.save(order);
     return new OrderRespondeDTO(orderSaved);
   }
 

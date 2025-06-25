@@ -10,6 +10,10 @@ import { OrderItemModule } from './order-item/order-item.module';
 import { OrderModule } from './order/order.module';
 import { PaymentModule } from './payment/payment.module';
 import { CustomerModule } from './customer/customer.module';
+import { Order } from './order/entities/order.entity';
+import { OrderItem } from './order-item/entities/order-item.entity';
+import { Payment } from './payment/entities/payment.entity';
+import { Customer } from './customer/entities/customer.entity';
 
 @Module({
   imports: [
@@ -20,7 +24,15 @@ import { CustomerModule } from './customer/customer.module';
       username: 'user',
       password: 'password',
       database: 'gerenciador_estabelecimento',
-      entities: [Category, Product, Supplier],
+      entities: [
+        Category,
+        Product,
+        Supplier,
+        Order,
+        OrderItem,
+        Payment,
+        Customer,
+      ],
       synchronize: true,
     }),
     CategoryModule,

@@ -7,7 +7,7 @@ export class CreateOrderDto {
   @ArrayMinSize(1, {
     message: 'deve conter pelo menos 1 item na compra',
   })
-  @ValidateNested({ each: true }) // Valida cada item com as regras do DTO
-  @Type(() => CreateOrderItemDto) 
+  @ValidateNested({ each: true })
+  @Type(() => CreateOrderItemDto)
   orderItems: CreateOrderItemDto[];
 }

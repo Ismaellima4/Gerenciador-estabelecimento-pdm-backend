@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
 import { SupplierResposeDTO } from './dto/supplier-response.dto';
@@ -15,6 +19,11 @@ export class SupplierService {
   async create(
     createSupplierDto: CreateSupplierDto,
   ): Promise<SupplierResposeDTO> {
+    if (!createSupplierDto.email && !createSupplierDto.phoneNumber) {
+      throw new BadRequestException(
+        'O fornecedor deve conter pelo menos um contato, Email ou Telefone',
+      );
+    }
     const supplier = this.supplierRepository.create(createSupplierDto);
     const supplierSaved = await this.supplierRepository.save(supplier);
     return new SupplierResposeDTO(supplierSaved);
