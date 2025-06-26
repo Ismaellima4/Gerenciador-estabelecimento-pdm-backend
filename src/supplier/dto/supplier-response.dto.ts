@@ -3,10 +3,10 @@ import { Supplier } from '../entities/supplier.entity';
 export class SupplierResposeDTO {
   id: string;
   supplierName: string;
-  cnpj?: string;
-  phoneNumber?: string;
-  email?: string;
-  additionalInformation?: string;
+  cnpj: string;
+  phoneNumber: string;
+  email: string;
+  additionalInformation: string;
 
   constructor(supplier: Supplier) {
     this.id = supplier.id;
@@ -14,6 +14,6 @@ export class SupplierResposeDTO {
     this.cnpj = supplier.cnpj;
     this.phoneNumber = supplier.phoneNumber;
     this.email = supplier.email;
-    this.phoneNumber = supplier.phoneNumber;
+    this.additionalInformation = supplier.additionalInformation;
   }
 }

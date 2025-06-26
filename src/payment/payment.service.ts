@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,7 +12,7 @@ import { PaymentStatus } from 'src/enum/payment-status.enum';
 @Injectable()
 export class PaymentService {
   constructor(
-     @InjectRepository(Order)
+    @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
 
     @InjectRepository(Customer)

@@ -35,12 +35,12 @@ export class OrderService {
       throw new BadRequestException('Nenhum produto encontrado !');
     }
 
-     order.orderItems = orderItems;
+    order.orderItems = orderItems;
 
-     const orderSaved = await this.orderRepository.save(order);
+    const orderSaved = await this.orderRepository.save(order);
+
     return new OrderRespondeDTO(orderSaved);
   }
-
 
   async findAll(): Promise<OrderRespondeDTO[]> {
     const orders = await this.orderRepository.find();

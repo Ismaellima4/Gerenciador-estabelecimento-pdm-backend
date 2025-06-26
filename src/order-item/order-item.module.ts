@@ -7,6 +7,7 @@ import { ProductModule } from 'src/product/product.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([OrderItem, Product]), ProductModule],
+
   providers: [OrderItemService],
   exports: [OrderItemService],
 })

@@ -14,5 +14,6 @@ import { SupplierModule } from 'src/supplier/supplier.module';
   ],
   controllers: [ProductController],
   providers: [ProductService],
+  exports: [ProductService],
 })
 export class ProductModule {}

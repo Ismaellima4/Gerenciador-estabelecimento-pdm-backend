@@ -12,7 +12,8 @@ export class CreateCustomerDto {
   name: string;
   @IsString()
   @IsNotEmpty()
-  cpf: string;
+  @IsOptional()
+  cpf?: string;
   @IsNotEmpty()
   @IsPhoneNumber('BR')
   @IsOptional()

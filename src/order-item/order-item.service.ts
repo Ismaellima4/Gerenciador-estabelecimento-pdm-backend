@@ -26,7 +26,7 @@ export class OrderItemService {
     for (const itemDto of createOrderItemDto) {
       const product = await this.productRepository.findOne({
         where: { id: itemDto.productID },
-    });
+      });
 
       if (!product) {
         throw new NotFoundException(
@@ -34,7 +34,7 @@ export class OrderItemService {
         );
       }
 
-    const orderItem = new OrderItem();
+      const orderItem = new OrderItem();
       orderItem.product = product;
       orderItem.quantity = itemDto.quantity;
       orderItem.order = order;

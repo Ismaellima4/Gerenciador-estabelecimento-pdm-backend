@@ -7,7 +7,7 @@ export class Customer {
   id: string;
   @Column({ length: 60 })
   name: string;
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   cpf: string;
   @Column({ nullable: true })
   phoneNumber: string;

@@ -57,12 +57,11 @@ export class ProductService {
     return product;
   }
 
-  async findAllById(ids: string[]): Promise<ProductResposeDTO[]> {
-    const products = await this.productRepository.find({
+  async findAllById(ids: string[]): Promise<Product[]> {
+    return this.productRepository.find({
       where: { id: In(ids) },
       relations: ['category', 'supplier'],
     });
-    return products.map((product) => new ProductResposeDTO(product));
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
