@@ -12,11 +12,12 @@ import { Order } from 'src/order/entities/order.entity';
 import { Customer } from 'src/customer/entities/customer.entity';
 import { PaymentType } from 'src/enum/payment-type.enum';
 import { OrderStatus } from 'src/enum/order-status.enum';
+import { PaymentStatus } from 'src/enum/payment-status.enum';
 
 @Entity('payments')
 export class Payment {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @OneToOne(() => Order, (order) => order.payment)
   @JoinColumn()
@@ -25,7 +26,7 @@ export class Payment {
   @Column('decimal', { precision: 10, scale: 2, nullable: false })
   amount: number;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   date: Date;
 
   @ManyToOne(() => Customer, { cascade: true, eager: true })
@@ -35,13 +36,11 @@ export class Payment {
   @Column({ type: 'enum', enum: PaymentType })
   paymentType: PaymentType;
 
-  @Column({ type: 'enum', enum: OrderStatus })
-  status: OrderStatus;
+  @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.INITIATED })
+  statusOrder: OrderStatus;
 
-  constructor() {
-    this.status = OrderStatus.INITIATED;
-    this.date = new Date();
-  }
+  @Column({ type: 'enum', enum: PaymentStatus, default: PaymentStatus.PENDING })
+  statusPayment: PaymentStatus;
 
   @BeforeInsert()
   @BeforeUpdate()
