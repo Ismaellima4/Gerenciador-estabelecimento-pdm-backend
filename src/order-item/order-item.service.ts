@@ -5,17 +5,44 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { OrderItem } from './entities/order-item.entity';
 import { Repository } from 'typeorm';
 import { OrderItemResponseDTO } from './dto/order-item-response.dto';
+import { Product } from 'src/product/entities/product.entity';
+import { Order } from 'src/order/entities/order.entity';
 
 @Injectable()
 export class OrderItemService {
   constructor(
     @InjectRepository(OrderItem)
     private readonly orderItemRepository: Repository<OrderItem>,
+
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
   ) {}
-  async create(createOrderItemDto: CreateOrderItemDto[]) {
-    const orderItem = this.orderItemRepository.create(createOrderItemDto);
-    const orderItemSaved = await this.orderItemRepository.save(orderItem);
-    return orderItemSaved;
+  async create(
+    createOrderItemDto: CreateOrderItemDto[],
+    order: Order,
+  ): Promise<OrderItem[]> {
+    const orderItems: OrderItem[] = [];
+
+    for (const itemDto of createOrderItemDto) {
+      const product = await this.productRepository.findOne({
+        where: { id: itemDto.productID },
+    });
+
+      if (!product) {
+        throw new NotFoundException(
+          `Produto com ID ${itemDto.productID} não encontrado`,
+        );
+      }
+
+    const orderItem = new OrderItem();
+      orderItem.product = product;
+      orderItem.quantity = itemDto.quantity;
+      orderItem.order = order;
+
+      orderItems.push(orderItem);
+    }
+
+    return orderItems;
   }
 
   async update(id: string, updateOrderItemDto: UpdateOrderItemDto) {

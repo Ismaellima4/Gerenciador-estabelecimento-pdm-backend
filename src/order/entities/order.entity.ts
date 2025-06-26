@@ -21,10 +21,10 @@ export class Order {
   })
   orderItems: OrderItem[];
 
-  @Column({ type: 'date' })
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   date: Date;
 
-  @Column({ type: 'enum', enum: OrderStatus })
+  @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.INITIATED })
   status: OrderStatus;
 
   @OneToOne(() => Payment, (payment) => payment.order, {
@@ -33,9 +33,4 @@ export class Order {
   })
   @JoinColumn()
   payment: Payment;
-
-  constructor() {
-    this.status = OrderStatus.INITIATED;
-    this.date = new Date();
-  }
 }

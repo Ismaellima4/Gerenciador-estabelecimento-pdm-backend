@@ -10,6 +10,8 @@ import { Order } from './entities/order.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderRespondeDTO } from './dto/order-response.dto';
 import { OrderItemService } from 'src/order-item/order-item.service';
+import { OrderStatus } from 'src/enum/order-status.enum';
+import { PaymentStatus } from 'src/enum/payment-status.enum';
 
 @Injectable()
 export class OrderService {
@@ -19,17 +21,26 @@ export class OrderService {
     private readonly orderItemService: OrderItemService,
   ) {}
   async create(createOrderDto: CreateOrderDto): Promise<OrderRespondeDTO> {
+    const order = new Order();
+    order.date = new Date();
+    order.status = OrderStatus.INITIATED;
+    order.payment.statusPayment = PaymentStatus.PENDING;
+
     const orderItems = await this.orderItemService.create(
       createOrderDto.orderItems,
+      order,
     );
+
     if (orderItems.length < 1) {
       throw new BadRequestException('Nenhum produto encontrado !');
     }
-    const orderSaved = await this.orderRepository.save({
-      orderItems: orderItems,
-    });
+
+     order.orderItems = orderItems;
+
+     const orderSaved = await this.orderRepository.save(order);
     return new OrderRespondeDTO(orderSaved);
   }
+
 
   async findAll(): Promise<OrderRespondeDTO[]> {
     const orders = await this.orderRepository.find();

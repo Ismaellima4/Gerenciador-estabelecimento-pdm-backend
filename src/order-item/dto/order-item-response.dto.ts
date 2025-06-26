@@ -2,13 +2,13 @@ import { OrderItem } from '../entities/order-item.entity';
 
 export class OrderItemResponseDTO {
   id: string;
-  orderID: string;
-  productName: string;
   quantity: number;
+  productId: string | null;
+  productName: string | null;
+
   constructor(orderItem: OrderItem) {
     this.id = orderItem.id;
-    this.orderID = orderItem.order.id;
-    this.productName = orderItem.product.productName;
     this.quantity = orderItem.quantity;
+    this.productId = orderItem.product?.id ?? null;
   }
 }

@@ -8,13 +8,13 @@ export class OrderRespondeDTO {
   orderItems: OrderItemResponseDTO[];
   date: Date;
   status: OrderStatus;
-  payment?: PaymentResponseDTO;
+  payment?: PaymentResponseDTO | null;
 
   constructor(order: Order) {
     this.id = order.id;
     this.date = order.date;
     this.status = order.status;
-    this.payment = order.payment;
+    this.payment = order.payment ? new PaymentResponseDTO(order.payment) : null;
     this.orderItems = order.orderItems.map(
       (orderItem) => new OrderItemResponseDTO(orderItem),
     );
