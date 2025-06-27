@@ -67,6 +67,18 @@ export class ProductService {
   async update(id: string, updateProductDto: UpdateProductDto) {
     const productUpdating = await this.findOneEntity(id);
     Object.assign(productUpdating, updateProductDto);
+    if (updateProductDto.category) {
+      const category = await this.categoryService.findOneEntity(
+        updateProductDto.category,
+      );
+      productUpdating.category = category;
+    }
+    if (updateProductDto.supplier) {
+      const supplier = await this.supplierService.findOneEntity(
+        updateProductDto.supplier,
+      );
+      productUpdating.supplier = supplier;
+    }
     const product = await this.productRepository.save(productUpdating);
     return new ProductResposeDTO(product);
   }
