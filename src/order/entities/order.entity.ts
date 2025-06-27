@@ -4,7 +4,6 @@ import {
   Column,
   OneToMany,
   OneToOne,
-  JoinColumn,
 } from 'typeorm';
 import { OrderItem } from 'src/order-item/entities/order-item.entity';
 import { Payment } from 'src/payment/entities/payment.entity';
@@ -31,6 +30,5 @@ export class Order {
     cascade: true,
     eager: true,
   })
-  @JoinColumn()
   payment: Payment;
 }

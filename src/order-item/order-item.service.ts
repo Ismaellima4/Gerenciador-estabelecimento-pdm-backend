@@ -6,7 +6,6 @@ import { OrderItem } from './entities/order-item.entity';
 import { Repository } from 'typeorm';
 import { OrderItemResponseDTO } from './dto/order-item-response.dto';
 import { Product } from 'src/product/entities/product.entity';
-import { Order } from 'src/order/entities/order.entity';
 
 @Injectable()
 export class OrderItemService {
@@ -17,10 +16,7 @@ export class OrderItemService {
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
   ) {}
-  async create(
-    createOrderItemDto: CreateOrderItemDto[],
-    order: Order,
-  ): Promise<OrderItem[]> {
+  async create(createOrderItemDto: CreateOrderItemDto[]): Promise<OrderItem[]> {
     const orderItems: OrderItem[] = [];
 
     for (const itemDto of createOrderItemDto) {
@@ -37,8 +33,6 @@ export class OrderItemService {
       const orderItem = new OrderItem();
       orderItem.product = product;
       orderItem.quantity = itemDto.quantity;
-      orderItem.order = order;
-
       orderItems.push(orderItem);
     }
 

@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsUUID } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
 import { PaymentType } from 'src/enum/payment-type.enum';
 
 export class CreatePaymentDto {
@@ -8,7 +8,8 @@ export class CreatePaymentDto {
 
   @IsUUID()
   @IsNotEmpty()
-  customerId: string;
+  @IsOptional()
+  customerId?: string;
 
   @IsEnum(PaymentType)
   @IsNotEmpty()

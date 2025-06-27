@@ -20,7 +20,7 @@ export class Payment {
   id: string;
 
   @OneToOne(() => Order, (order) => order.payment)
-  @JoinColumn()
+  @JoinColumn({ name: 'order_id' })
   order: Order;
 
   @Column('decimal', { precision: 10, scale: 2, nullable: false })
@@ -29,7 +29,7 @@ export class Payment {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   date: Date;
 
-  @ManyToOne(() => Customer, { cascade: true, eager: true })
+  @ManyToOne(() => Customer, { cascade: true, eager: true, nullable: true })
   @JoinColumn({ name: 'customer_id' })
   customer: Customer;
 

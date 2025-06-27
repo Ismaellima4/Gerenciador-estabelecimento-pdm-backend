@@ -4,22 +4,18 @@ import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Payment } from './entities/payment.entity';
-import { Order } from 'src/order/entities/order.entity';
-import { Customer } from 'src/customer/entities/customer.entity';
 import { PaymentResponseDTO } from './dto/payment-response.dto';
 import { PaymentStatus } from 'src/enum/payment-status.enum';
+import { OrderService } from 'src/order/order.service';
+import { CustomerService } from 'src/customer/customer.service';
 
 @Injectable()
 export class PaymentService {
   constructor(
-    @InjectRepository(Order)
-    private readonly orderRepository: Repository<Order>,
-
-    @InjectRepository(Customer)
-    private readonly customerRepository: Repository<Customer>,
-
     @InjectRepository(Payment)
     private readonly paymentRepository: Repository<Payment>,
+    private readonly orderService: OrderService,
+    private readonly customerService: CustomerService,
   ) {}
 
   async create(
@@ -27,28 +23,18 @@ export class PaymentService {
   ): Promise<PaymentResponseDTO> {
     const { orderId, customerId, paymentType } = createPaymentDto;
 
-    const order = await this.orderRepository.findOne({
-      where: { id: orderId },
-      relations: ['orderItems', 'orderItems.product'],
-    });
-
+    const order = await this.orderService.findOneEntity(orderId);
     if (!order) {
       throw new NotFoundException(`Order with ID ${orderId} not found`);
     }
 
-    const customer = await this.customerRepository.findOne({
-      where: { id: customerId },
-    });
-
-    if (!customer) {
-      throw new NotFoundException(`Customer with ID ${customerId} not found`);
+    const payment = new Payment();
+    if (customerId) {
+      payment.customer = await this.customerService.findOneEntity(customerId);
     }
 
-    const payment = this.paymentRepository.create({
-      order,
-      customer,
-      paymentType,
-    });
+    payment.order = order;
+    payment.paymentType = paymentType;
 
     const savedPayment = await this.paymentRepository.save(payment);
     return new PaymentResponseDTO(savedPayment);
