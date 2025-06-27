@@ -22,12 +22,7 @@ export class PaymentService {
     createPaymentDto: CreatePaymentDto,
   ): Promise<PaymentResponseDTO> {
     const { orderId, customerId, paymentType } = createPaymentDto;
-
     const order = await this.orderService.findOneEntity(orderId);
-    if (!order) {
-      throw new NotFoundException(`Order with ID ${orderId} not found`);
-    }
-
     const payment = new Payment();
     if (customerId) {
       payment.customer = await this.customerService.findOneEntity(customerId);
