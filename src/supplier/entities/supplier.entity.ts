@@ -13,11 +13,11 @@ export class Supplier {
   id: string;
   @Column()
   supplierName: string;
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true })
   cnpj: string;
   @Column({ nullable: true })
   phoneNumber: string;
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true })
   email: string;
   @Column({ nullable: true })
   additionalInformation: string;
