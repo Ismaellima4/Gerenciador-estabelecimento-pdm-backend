@@ -16,7 +16,10 @@ export class ProductService {
     private readonly categoryService: CategoryService,
     private readonly supplierService: SupplierService,
   ) {}
-  async create(createProductDto: CreateProductDto): Promise<ProductResposeDTO> {
+  async create(
+    createProductDto: CreateProductDto,
+    file?: Express.Multer.File,
+  ): Promise<ProductResposeDTO> {
     const category = await this.categoryService.findOneEntity(
       createProductDto.category,
     );
