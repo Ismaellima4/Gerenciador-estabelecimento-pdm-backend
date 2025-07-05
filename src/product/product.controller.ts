@@ -28,7 +28,7 @@ export class ProductController {
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator({
-          fileType: 'image/png,image/jpeg,image/jpg',
+          fileType: new RegExp('^(image\\/jpeg|image\\/png|image\\/jpg)$'),
         })
         .addMaxSizeValidator({
           maxSize: 1024 * 1024 * 10, // 10MB

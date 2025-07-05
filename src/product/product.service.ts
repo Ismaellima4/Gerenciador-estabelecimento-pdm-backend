@@ -7,6 +7,7 @@ import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryService } from 'src/category/category.service';
 import { SupplierService } from 'src/supplier/supplier.service';
+import { UploadService } from 'src/upload/upload.service';
 
 @Injectable()
 export class ProductService {
@@ -15,6 +16,7 @@ export class ProductService {
     private readonly productRepository: Repository<Product>,
     private readonly categoryService: CategoryService,
     private readonly supplierService: SupplierService,
+    private readonly uploadService: UploadService,
   ) {}
   async create(
     createProductDto: CreateProductDto,
@@ -33,6 +35,10 @@ export class ProductService {
     });
 
     const productSaved = await this.productRepository.save(product);
+
+    if (file) {
+      this.uploadService.uploadFile(file, productSaved.id).subscribe();
+    }
 
     return new ProductResposeDTO(productSaved);
   }
