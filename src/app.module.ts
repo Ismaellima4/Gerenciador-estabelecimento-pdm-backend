@@ -14,6 +14,9 @@ import { Order } from './order/entities/order.entity';
 import { Payment } from './payment/entities/payment.entity';
 import { Customer } from './customer/entities/customer.entity';
 import { OrderItem } from './order-item/entities/order-item.entity';
+import { UserModule } from './user/user.module';
+import { User } from './user/entities/user.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -32,6 +35,7 @@ import { OrderItem } from './order-item/entities/order-item.entity';
         Payment,
         Customer,
         OrderItem,
+        User,
       ],
       synchronize: true,
     }),
@@ -42,6 +46,8 @@ import { OrderItem } from './order-item/entities/order-item.entity';
     OrderModule,
     PaymentModule,
     CustomerModule,
+    AuthModule,
+    UserModule,
   ],
 })
 export class AppModule {}
