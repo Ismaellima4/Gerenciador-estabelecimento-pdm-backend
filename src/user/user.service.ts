@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { encryptedPassword } from 'src/common/encrypted-utils';
+import { UserResponseDto } from './dto/user-response.dto';
+import { UserRole } from 'src/enum/roles.enum';
 
 @Injectable()
 export class UserService {
@@ -12,15 +14,18 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
   async create(createUserDto: CreateUserDto) {
-    return await this.userRepository.save({
+    const password = await encryptedPassword(createUserDto.password);
+    const userSaved = await this.userRepository.save({
       username: createUserDto.username,
-      password: createUserDto.password,
-      role: createUserDto.role,
+      password: password,
+      role: UserRole.Admin,
     });
+    return new UserResponseDto(userSaved);
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll(): Promise<UserResponseDto[]> {
+    const users = await this.userRepository.find();
+    return users.map((user) => new UserResponseDto(user));
   }
 
   async findOneByUserName(username: string) {
@@ -34,11 +39,7 @@ export class UserService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    return this.userRepository.delete(id);
   }
 }

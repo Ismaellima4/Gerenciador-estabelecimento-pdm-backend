@@ -17,9 +17,14 @@ import { OrderItem } from './order-item/entities/order-item.entity';
 import { UserModule } from './user/user.module';
 import { User } from './user/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: './.env.example',
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
