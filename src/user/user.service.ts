@@ -11,8 +11,12 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto) {
+    return await this.userRepository.save({
+      username: createUserDto.username,
+      password: createUserDto.password,
+      role: createUserDto.role,
+    });
   }
 
   findAll() {

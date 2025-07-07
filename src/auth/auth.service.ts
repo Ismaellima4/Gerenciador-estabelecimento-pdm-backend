@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { AuthRequestDto } from './dto/auth-request.dto';
+import { JwtPayload } from './jwt.strategy';
 
 @Injectable()
 export class AuthService {
@@ -14,13 +15,14 @@ export class AuthService {
   async signIn(auth: AuthRequestDto): Promise<AuthResponseDto> {
     const user = await this.userService.findOneByUserName(auth.username);
 
-    if (user?.password != auth.pass) {
+    if (user.password != auth.password) {
       throw new UnauthorizedException();
     }
 
-    const payload = {
+    const payload: JwtPayload = {
       sub: user.id,
       username: user.username,
+      role: user.role,
     };
 
     const acessToken = await this.jwtService.signAsync(payload);
