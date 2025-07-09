@@ -5,7 +5,6 @@ import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { encryptedPassword } from 'src/common/encrypted-utils';
 import { UserResponseDto } from './dto/user-response.dto';
-import { UserRole } from 'src/enum/roles.enum';
 
 @Injectable()
 export class UserService {
@@ -18,7 +17,7 @@ export class UserService {
     const userSaved = await this.userRepository.save({
       username: createUserDto.username,
       password: password,
-      role: UserRole.Admin,
+      role: createUserDto.role,
     });
     return new UserResponseDto(userSaved);
   }

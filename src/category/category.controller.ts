@@ -13,17 +13,17 @@ import { CategoryService } from './category.service';
 import { CreateCategoriaDto } from './dto/create-category.dto';
 import { UpdateCategoriaDto } from './dto/update-category.dto';
 import { JwtAuthGuard } from 'src/auth/guards/roles.guard';
-import { RolesGuard } from 'src/common/guards/roles.guards';
-import { Role } from 'src/auth/decorators/roles.decorators';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorators';
 import { UserRole } from 'src/enum/roles.enum';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(UserRole.Admin, UserRole.Admin_Stock)
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoriaService: CategoryService) {}
 
   @Post()
-  @Role(UserRole.Admin)
   create(@Body() createCategoriaDto: CreateCategoriaDto) {
     return this.categoriaService.create(createCategoriaDto);
   }
