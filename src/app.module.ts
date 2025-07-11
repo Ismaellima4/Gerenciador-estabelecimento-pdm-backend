@@ -14,13 +14,16 @@ import { Order } from './order/entities/order.entity';
 import { Payment } from './payment/entities/payment.entity';
 import { Customer } from './customer/entities/customer.entity';
 import { OrderItem } from './order-item/entities/order-item.entity';
+import { UserModule } from './user/user.module';
+import { User } from './user/entities/user.entity';
+import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.example'],
+      envFilePath: './.env.example',
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -37,6 +40,7 @@ import { ConfigModule } from '@nestjs/config';
         Payment,
         Customer,
         OrderItem,
+        User,
       ],
       synchronize: true,
     }),
@@ -47,6 +51,8 @@ import { ConfigModule } from '@nestjs/config';
     OrderModule,
     PaymentModule,
     CustomerModule,
+    AuthModule,
+    UserModule,
   ],
 })
 export class AppModule {}

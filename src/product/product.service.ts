@@ -20,6 +20,7 @@ export class ProductService {
   ) {}
   async create(
     createProductDto: CreateProductDto,
+    jwt_token: string | undefined,
     file?: Express.Multer.File,
   ): Promise<ProductResposeDTO> {
     const category = await this.categoryService.findOneEntity(
@@ -37,7 +38,7 @@ export class ProductService {
     const productSaved = await this.productRepository.save(product);
 
     if (file) {
-      this.uploadService.uploadFile(file, productSaved.id).subscribe();
+      await this.uploadService.uploadFile(file, productSaved.id, jwt_token);
     }
 
     return new ProductResposeDTO(productSaved);
