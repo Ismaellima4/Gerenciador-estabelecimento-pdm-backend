@@ -15,12 +15,14 @@ export class CreateProductDto {
   @IsOptional()
   @IsNotEmpty()
   description?: string;
+  @Type(() => Number)
   @IsNumber()
   @IsNotEmpty()
   price: number;
   @IsString()
   @IsNotEmpty()
   category: string;
+  @Type(() => Number)
   @IsNumber()
   @IsNotEmpty()
   amount: number;

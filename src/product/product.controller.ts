@@ -7,11 +7,16 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipeBuilder,
+  HttpStatus,
   UseGuards,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { JwtAuthGuard } from 'src/auth/guards/roles.guard';
 import { UserRole } from 'src/enum/roles.enum';
@@ -24,8 +29,25 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  @UseInterceptors(FileInterceptor('file'))
+  create(
+    @Body() createProductDto: CreateProductDto,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: new RegExp('^(image\\/jpeg|image\\/png|image\\/jpg)$'),
+        })
+        .addMaxSizeValidator({
+          maxSize: 1024 * 1024 * 10, // 10MB
+        })
+        .build({
+          fileIsRequired: false,
+          errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        }),
+    )
+    file?: Express.Multer.File,
+  ) {
+    return this.productService.create(createProductDto, file);
   }
 
   @Get()
