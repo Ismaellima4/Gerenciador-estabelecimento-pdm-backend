@@ -12,6 +12,7 @@ import {
   ParseFilePipeBuilder,
   HttpStatus,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -21,6 +22,7 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 import { JwtAuthGuard } from 'src/auth/guards/roles.guard';
 import { UserRole } from 'src/enum/roles.enum';
 import { Roles } from 'src/auth/decorators/roles.decorators';
+import { Request } from 'express';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.Admin, UserRole.Admin_Stock)
@@ -31,6 +33,7 @@ export class ProductController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   create(
+    @Req() req: Request,
     @Body() createProductDto: CreateProductDto,
     @UploadedFile(
       new ParseFilePipeBuilder()
@@ -47,7 +50,8 @@ export class ProductController {
     )
     file?: Express.Multer.File,
   ) {
-    return this.productService.create(createProductDto, file);
+    const jwt_token = req.headers.authorization;
+    return this.productService.create(createProductDto, jwt_token, file);
   }
 
   @Get()
