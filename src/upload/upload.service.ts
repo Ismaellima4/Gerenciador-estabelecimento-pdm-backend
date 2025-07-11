@@ -1,35 +1,41 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-import FormData = require('form-data');
+import * as FormData from 'form-data';
 import { extname } from 'path';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class UploadService {
-  private readonly uploadApiUrl;
+  private readonly uploadApiUrl: string;
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {
-    this.uploadApiUrl = this.configService.get<string>('UPLOAD_API_URL');
+    this.uploadApiUrl = this.configService.getOrThrow<string>('UPLOAD_API_URL');
   }
 
-  uploadFile(file: Express.Multer.File, product_id: string) {
+  async uploadFile(
+    file: Express.Multer.File,
+    product_id: string,
+    jwt_token: string | undefined,
+  ): Promise<void> {
     const formData = new FormData();
     const uniqueFileName = product_id + extname(file.originalname);
+    console.log(uniqueFileName);
 
     formData.append('file', file.buffer, {
       filename: file.originalname,
     });
     formData.append('product_id', uniqueFileName);
 
-    return this.httpService.post(
-      String(this.uploadApiUrl + '/upload'),
-      formData,
-      {
-        headers: formData.getHeaders(),
-      },
+    await firstValueFrom(
+      this.httpService.post(String(this.uploadApiUrl + '/upload'), formData, {
+        headers: {
+          ...formData.getHeaders(),
+          Authorization: jwt_token,
+        },
+      }),
     );
   }
 }
