@@ -14,9 +14,14 @@ import { Order } from './order/entities/order.entity';
 import { Payment } from './payment/entities/payment.entity';
 import { Customer } from './customer/entities/customer.entity';
 import { OrderItem } from './order-item/entities/order-item.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env.example'],
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
