@@ -2,7 +2,6 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as FormData from 'form-data';
-import { extname } from 'path';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
@@ -17,13 +16,10 @@ export class UploadService {
 
   async uploadFile(
     file: Express.Multer.File,
-    product_id: string,
+    uniqueFileName: string,
     jwt_token: string | undefined,
   ): Promise<void> {
     const formData = new FormData();
-    const uniqueFileName = product_id + extname(file.originalname);
-    console.log(uniqueFileName);
-
     formData.append('file', file.buffer, {
       filename: file.originalname,
     });
