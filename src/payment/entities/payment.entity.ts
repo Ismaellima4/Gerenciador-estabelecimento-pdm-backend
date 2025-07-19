@@ -19,7 +19,9 @@ export class Payment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => Order, (order) => order.payment)
+  @OneToOne(() => Order, (order) => order.payment, {
+    cascade: ['insert', 'update'],
+  })
   @JoinColumn({ name: 'order_id' })
   order: Order;
 

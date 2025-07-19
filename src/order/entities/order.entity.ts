@@ -1,3 +1,4 @@
+// src/order/entities/order.entity.ts
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -15,7 +16,7 @@ export class Order {
   id: string;
 
   @OneToMany(() => OrderItem, (item) => item.order, {
-    cascade: true,
+    cascade: ['insert', 'remove', 'update'],
     eager: true,
   })
   orderItems: OrderItem[];
@@ -27,7 +28,7 @@ export class Order {
   status: OrderStatus;
 
   @OneToOne(() => Payment, (payment) => payment.order, {
-    cascade: true,
+    cascade: ['insert', 'update'],
     eager: true,
   })
   payment: Payment;

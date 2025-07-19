@@ -15,6 +15,7 @@ export class OrderItem {
 
   @ManyToOne(() => Order, (order) => order.orderItems, {
     onDelete: 'CASCADE',
+    cascade: ['insert', 'update'],
   })
   @JoinColumn({ name: 'order_id' })
   order: Order;
@@ -23,6 +24,7 @@ export class OrderItem {
     eager: true,
     nullable: false,
     onDelete: 'CASCADE',
+    cascade: ['insert', 'update'],
   })
   @JoinColumn({ name: 'product_id' })
   product: Product;

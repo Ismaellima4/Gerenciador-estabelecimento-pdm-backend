@@ -66,6 +66,22 @@ export class PaymentService {
   async payOrder(id: string): Promise<PaymentResponseDTO> {
     const payment = await this.findOneEntity(id);
 
+    if (payment.statusPayment === PaymentStatus.COMPLETED) {
+      return new PaymentResponseDTO(payment);
+    }
+
+    const order = payment.order;
+
+    order.orderItems.map((orderItem) => {
+      const product = orderItem.product;
+
+      if (orderItem.quantity <= product.amount) {
+        product.amount -= orderItem.quantity;
+      } else {
+        product.amount = 0;
+      }
+    });
+
     payment.statusPayment = PaymentStatus.COMPLETED;
     payment.order.payment.statusPayment = PaymentStatus.COMPLETED;
 

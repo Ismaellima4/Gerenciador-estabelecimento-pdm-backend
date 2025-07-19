@@ -1,16 +1,17 @@
 services:
-  postgres:
-    image: postgres:15
-    container_name: postgres_pdm
-    restart: always
-    ports:
-      - '5432:5432'
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: gerenciador_estabelecimento
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 
-volumes:
-  postgres_data:
+  backend:
+    build:
+      context: .
+    ports:
+      - '8080:8080'
+    environment:
+      UPLOAD_API_URL: http://localhost:3000
+      JWT_SECRET: TJ9RFNIYhU7x79+CtGQgSk7bPRe/HNWLahld36fkx18
+      DB_HOST: ep-muddy-hall-acpqrzhy-pooler.sa-east-1.aws.neon.tech
+      DB_USER: neondb_owner
+      DB_DATABASE: neondb
+      DB_PASSWORD: npg_s5H8EagezOWb
+      SSL_MODE: true
+      DB_PORT: 5432
+      ENV: production

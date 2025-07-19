@@ -18,7 +18,7 @@ export const dataSourceOptions: DataSourceOptions = {
   migrations: ['dist/db/migrations/*.js'],
   migrationsTableName: 'migrations',
   migrationsRun: false,
-  synchronize: process.env.ENV !== 'production',
+  synchronize: true,
   logging: process.env.ENV !== 'production',
 };
 
