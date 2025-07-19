@@ -1,10 +1,12 @@
+import { Type } from 'class-transformer';
 import { IsEnum, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
 import { PaymentType } from 'src/enum/payment-type.enum';
+import { CreateOrderDto } from 'src/order/dto/create-order.dto';
 
 export class CreatePaymentDto {
-  @IsUUID()
+  @Type(() => CreateOrderDto)
   @IsNotEmpty()
-  orderId: string;
+  order: CreateOrderDto;
 
   @IsUUID()
   @IsNotEmpty()

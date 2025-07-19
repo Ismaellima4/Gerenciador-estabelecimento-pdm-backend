@@ -19,6 +19,10 @@ export class OrderService {
     private readonly orderItemService: OrderItemService,
   ) {}
   async create(createOrderDto: CreateOrderDto): Promise<OrderRespondeDTO> {
+    return new OrderRespondeDTO(await this.createInternal(createOrderDto));
+  }
+
+  async createInternal(createOrderDto: CreateOrderDto): Promise<Order> {
     const order = new Order();
 
     const orderItems = await this.orderItemService.create(
@@ -32,8 +36,7 @@ export class OrderService {
     order.orderItems = orderItems;
 
     const orderSaved = await this.orderRepository.save(order);
-
-    return new OrderRespondeDTO(orderSaved);
+    return orderSaved;
   }
 
   async findAll(): Promise<OrderRespondeDTO[]> {

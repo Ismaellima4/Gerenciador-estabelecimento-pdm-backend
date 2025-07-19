@@ -21,8 +21,10 @@ export class PaymentService {
   async create(
     createPaymentDto: CreatePaymentDto,
   ): Promise<PaymentResponseDTO> {
-    const { orderId, customerId, paymentType } = createPaymentDto;
-    const order = await this.orderService.findOneEntity(orderId);
+    const order = await this.orderService.createInternal(
+      createPaymentDto.order,
+    );
+    const { customerId, paymentType } = createPaymentDto;
     const payment = new Payment();
     if (customerId) {
       payment.customer = await this.customerService.findOneEntity(customerId);
