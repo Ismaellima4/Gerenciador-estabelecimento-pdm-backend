@@ -40,12 +40,27 @@ export class OrderService {
   }
 
   async findAll(): Promise<OrderRespondeDTO[]> {
-    const orders = await this.orderRepository.find();
+    const orders = await this.orderRepository.find({
+      relations: [
+        'orderItems',
+        'orderItems.product',
+        'orderItems.product.category',
+        'orderItems.product.supplier',
+      ],
+    });
     return orders.map((order) => new OrderRespondeDTO(order));
   }
 
   async findOneEntity(id: string): Promise<Order> {
-    const order = await this.orderRepository.findOne({ where: { id } });
+    const order = await this.orderRepository.findOne({
+      where: { id },
+      relations: [
+        'orderItems',
+        'orderItems.product',
+        'orderItems.product.category',
+        'orderItems.product.supplier',
+      ],
+    });
     if (!order) {
       throw new NotFoundException(`Pedido não encontrado com id ${id}`);
     }
