@@ -21,19 +21,31 @@ export class PaymentService {
   async create(
     createPaymentDto: CreatePaymentDto,
   ): Promise<PaymentResponseDTO> {
-    const order = await this.orderService.createInternal(
-      createPaymentDto.order,
-    );
-    const { customerId, paymentType } = createPaymentDto;
+    const { orderId, customerId, paymentType } = createPaymentDto;
+
+    const order = await this.orderService.findOneWithRelations(orderId);
+
+    if (!order) {
+      throw new NotFoundException(`Pedido com id ${orderId} não encontrado.`);
+    }
+
     const payment = new Payment();
+
     if (customerId) {
-      payment.customer = await this.customerService.findOneEntity(customerId);
+      const customer = await this.customerService.findOneEntity(customerId);
+      if (!customer) {
+        throw new NotFoundException(
+          `Cliente com id ${customerId} não encontrado.`,
+        );
+      }
+      payment.customer = customer;
     }
 
     payment.order = order;
     payment.paymentType = paymentType;
 
     const savedPayment = await this.paymentRepository.save(payment);
+
     return new PaymentResponseDTO(savedPayment);
   }
 

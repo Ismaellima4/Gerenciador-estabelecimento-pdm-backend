@@ -49,8 +49,8 @@ export class Payment {
   calculateFinalAmount(): void {
     if (this.order?.orderItems?.length) {
       const total = this.order.orderItems
-        .map((item) => item.product.price)
-        .reduce((sum, price) => sum + Number(price), 0);
+        .map((item) => item.product.price * item.quantity)
+        .reduce((sum, subtotal) => sum + Number(subtotal), 0);
       this.amount = Number(total.toFixed(2));
     } else {
       this.amount = 0;

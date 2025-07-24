@@ -19,10 +19,6 @@ export class OrderService {
     private readonly orderItemService: OrderItemService,
   ) {}
   async create(createOrderDto: CreateOrderDto): Promise<OrderRespondeDTO> {
-    return new OrderRespondeDTO(await this.createInternal(createOrderDto));
-  }
-
-  async createInternal(createOrderDto: CreateOrderDto): Promise<Order> {
     const order = new Order();
 
     const orderItems = await this.orderItemService.create(
@@ -30,13 +26,46 @@ export class OrderService {
     );
 
     if (orderItems.length < 1) {
-      throw new BadRequestException('Nenhum produto encontrado !');
+      throw new BadRequestException('Nenhum produto encontrado!');
     }
 
     order.orderItems = orderItems;
 
     const orderSaved = await this.orderRepository.save(order);
-    return orderSaved;
+
+    const orderWithRelations = await this.orderRepository.findOne({
+      where: { id: orderSaved.id },
+      relations: [
+        'orderItems',
+        'orderItems.product',
+        'orderItems.product.category',
+        'orderItems.product.supplier',
+      ],
+    });
+
+    if (!orderWithRelations) {
+      throw new NotFoundException('Pedido não encontrado após salvar.');
+    }
+
+    return new OrderRespondeDTO(orderWithRelations);
+  }
+
+  async findOneWithRelations(orderId: string): Promise<Order> {
+    const order = await this.orderRepository.findOne({
+      where: { id: orderId },
+      relations: [
+        'orderItems',
+        'orderItems.product',
+        'orderItems.product.category',
+        'orderItems.product.supplier',
+      ],
+    });
+
+    if (!order) {
+      throw new NotFoundException('Pedido não encontrado.');
+    }
+
+    return order;
   }
 
   async findAll(): Promise<OrderRespondeDTO[]> {
