@@ -17,7 +17,7 @@ export class OrderService {
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
     private readonly orderItemService: OrderItemService,
-  ) {}
+  ) { }
   async create(createOrderDto: CreateOrderDto): Promise<OrderRespondeDTO> {
     const order = new Order();
 
@@ -36,6 +36,7 @@ export class OrderService {
     const orderWithRelations = await this.orderRepository.findOne({
       where: { id: orderSaved.id },
       relations: [
+        'payment',
         'orderItems',
         'orderItems.product',
         'orderItems.product.category',
@@ -54,6 +55,7 @@ export class OrderService {
     const order = await this.orderRepository.findOne({
       where: { id: orderId },
       relations: [
+        'payment',
         'orderItems',
         'orderItems.product',
         'orderItems.product.category',
@@ -71,6 +73,7 @@ export class OrderService {
   async findAll(): Promise<OrderRespondeDTO[]> {
     const orders = await this.orderRepository.find({
       relations: [
+        'payment',
         'orderItems',
         'orderItems.product',
         'orderItems.product.category',
@@ -84,6 +87,7 @@ export class OrderService {
     const order = await this.orderRepository.findOne({
       where: { id },
       relations: [
+        'payment',
         'orderItems',
         'orderItems.product',
         'orderItems.product.category',

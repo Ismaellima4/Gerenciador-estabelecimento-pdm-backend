@@ -28,7 +28,7 @@ import { Request } from 'express';
 @Roles(UserRole.Admin, UserRole.Admin_Stock)
 @Controller('products')
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productService: ProductService) { }
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))
@@ -51,6 +51,7 @@ export class ProductController {
     file?: Express.Multer.File,
   ) {
     const jwt_token = req.headers.authorization;
+    console.log(file);
     return this.productService.create(createProductDto, jwt_token, file);
   }
 

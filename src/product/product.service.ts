@@ -18,7 +18,7 @@ export class ProductService {
     private readonly categoryService: CategoryService,
     private readonly supplierService: SupplierService,
     private readonly uploadService: UploadService,
-  ) {}
+  ) { }
   async create(
     createProductDto: CreateProductDto,
     jwt_token: string | undefined,
@@ -34,7 +34,7 @@ export class ProductService {
       ...createProductDto,
       category,
       supplier,
-      storageImageName: file ? extname(file.filename) : '',
+      storageImageName: file ? extname(file.filename) : '.jpg',
     });
 
     const productSaved = await this.productRepository.save(product);

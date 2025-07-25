@@ -11,7 +11,6 @@ import {
 import { Order } from 'src/order/entities/order.entity';
 import { Customer } from 'src/customer/entities/customer.entity';
 import { PaymentType } from 'src/enum/payment-type.enum';
-import { OrderStatus } from 'src/enum/order-status.enum';
 import { PaymentStatus } from 'src/enum/payment-status.enum';
 
 @Entity('payments')
@@ -37,9 +36,6 @@ export class Payment {
 
   @Column({ type: 'enum', enum: PaymentType })
   paymentType: PaymentType;
-
-  @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.INITIATED })
-  statusOrder: OrderStatus;
 
   @Column({ type: 'enum', enum: PaymentStatus, default: PaymentStatus.PENDING })
   statusPayment: PaymentStatus;

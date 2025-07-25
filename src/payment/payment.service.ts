@@ -8,6 +8,7 @@ import { PaymentResponseDTO } from './dto/payment-response.dto';
 import { PaymentStatus } from 'src/enum/payment-status.enum';
 import { OrderService } from 'src/order/order.service';
 import { CustomerService } from 'src/customer/customer.service';
+import { OrderStatus } from 'src/enum/order-status.enum';
 
 @Injectable()
 export class PaymentService {
@@ -16,7 +17,7 @@ export class PaymentService {
     private readonly paymentRepository: Repository<Payment>,
     private readonly orderService: OrderService,
     private readonly customerService: CustomerService,
-  ) {}
+  ) { }
 
   async create(
     createPaymentDto: CreatePaymentDto,
@@ -97,7 +98,7 @@ export class PaymentService {
     });
 
     payment.statusPayment = PaymentStatus.COMPLETED;
-    payment.order.payment.statusPayment = PaymentStatus.COMPLETED;
+    payment.order.status = OrderStatus.COMPLETED;
 
     const pay = await this.paymentRepository.save(payment);
 
