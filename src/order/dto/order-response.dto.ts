@@ -7,13 +7,13 @@ export class OrderRespondeDTO {
   orderItems: OrderItemResponseDTO[];
   date: Date;
   orderStatus: OrderStatus;
-  payment?: string;
+  paymentId?: string;
 
   constructor(order: Order) {
     this.id = order.id;
     this.date = order.date;
     this.orderStatus = order.status;
-    this.payment = order.payment?.id ?? null;
+    this.paymentId = order.payment?.id ?? null;
     this.orderItems = order.orderItems.map(
       (orderItem) => new OrderItemResponseDTO(orderItem),
     );
