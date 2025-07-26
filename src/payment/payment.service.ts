@@ -17,7 +17,7 @@ export class PaymentService {
     private readonly paymentRepository: Repository<Payment>,
     private readonly orderService: OrderService,
     private readonly customerService: CustomerService,
-  ) { }
+  ) {}
 
   async create(
     createPaymentDto: CreatePaymentDto,
@@ -47,7 +47,7 @@ export class PaymentService {
 
     const savedPayment = await this.paymentRepository.save(payment);
 
-    return new PaymentResponseDTO(savedPayment);
+    return this.payOrder(savedPayment.id);
   }
 
   async findAll(): Promise<PaymentResponseDTO[]> {
