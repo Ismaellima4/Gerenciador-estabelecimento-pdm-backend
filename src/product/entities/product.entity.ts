@@ -26,7 +26,7 @@ export class Product {
   barCode: string;
   @Column({ type: 'date' })
   manufacturingDate: Date;
-  @Column({ nullable: true, unique: true })
+  @Column({ nullable: true })
   storageImageName: string;
   @ManyToOne(() => Category, (category) => category.products)
   @JoinColumn()

@@ -12,6 +12,7 @@ export class ProductResposeDTO {
   expirationDate: Date;
   barCode?: string;
   manufacturingDate: Date;
+  productImage: string; /// uri para buscar a imagem no bucket
   supplier: SupplierResposeDTO;
 
   constructor(product: Product) {
@@ -25,5 +26,6 @@ export class ProductResposeDTO {
     this.barCode = product.barCode;
     this.manufacturingDate = product.manufacturingDate;
     this.supplier = new SupplierResposeDTO(product.supplier);
+    this.productImage = `http://192.168.5.12:3000/image/${this.id}${product.storageImageName}`
   }
 }

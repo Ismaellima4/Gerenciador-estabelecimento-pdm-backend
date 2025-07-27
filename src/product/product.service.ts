@@ -34,7 +34,7 @@ export class ProductService {
       ...createProductDto,
       category,
       supplier,
-      storageImageName: file ? extname(file.filename) : '.jpg',
+      storageImageName: file ? extname(file.originalname) : '.jpeg',
     });
 
     const productSaved = await this.productRepository.save(product);

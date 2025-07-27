@@ -51,7 +51,6 @@ export class ProductController {
     file?: Express.Multer.File,
   ) {
     const jwt_token = req.headers.authorization;
-    console.log(file);
     return this.productService.create(createProductDto, jwt_token, file);
   }
 
