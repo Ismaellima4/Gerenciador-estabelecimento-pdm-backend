@@ -28,7 +28,7 @@ import { Request } from 'express';
 @Roles(UserRole.Admin, UserRole.Admin_Stock)
 @Controller('products')
 export class ProductController {
-  constructor(private readonly productService: ProductService) { }
+  constructor(private readonly productService: ProductService) {}
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))

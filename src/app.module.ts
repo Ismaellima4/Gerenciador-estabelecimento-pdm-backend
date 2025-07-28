@@ -11,6 +11,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { dataSourceOptions } from './db/data-source';
+import { HealthCheckModule } from './health-check/health-check.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { dataSourceOptions } from './db/data-source';
       isGlobal: true,
       envFilePath: './.env',
     }),
+    HealthCheckModule,
     TypeOrmModule.forRoot(dataSourceOptions),
     CategoryModule,
     ProductModule,
@@ -30,4 +32,4 @@ import { dataSourceOptions } from './db/data-source';
     UserModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }

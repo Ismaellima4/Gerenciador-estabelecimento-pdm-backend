@@ -18,7 +18,7 @@ export class ProductService {
     private readonly categoryService: CategoryService,
     private readonly supplierService: SupplierService,
     private readonly uploadService: UploadService,
-  ) { }
+  ) {}
   async create(
     createProductDto: CreateProductDto,
     jwt_token: string | undefined,
