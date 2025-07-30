@@ -10,6 +10,8 @@ import { Order } from './entities/order.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderRespondeDTO } from './dto/order-response.dto';
 import { OrderItemService } from 'src/order-item/order-item.service';
+import { OrderItem } from 'src/order-item/entities/order-item.entity';
+import { Product } from 'src/product/entities/product.entity';
 
 @Injectable()
 export class OrderService {
@@ -110,9 +112,40 @@ export class OrderService {
     updateOrderDto: UpdateOrderDto,
   ): Promise<OrderRespondeDTO> {
     const orderUpdating = await this.findOneEntity(id);
-    Object.assign(orderUpdating, updateOrderDto);
-    const orderSaved = await this.orderRepository.save(orderUpdating);
-    return new OrderRespondeDTO(orderSaved);
+
+    // Mapear orderItems, como no exemplo anterior
+    if (updateOrderDto.orderItems && updateOrderDto.orderItems.length > 0) {
+      orderUpdating.orderItems = updateOrderDto.orderItems.map((itemDto) => {
+        const orderItem = new OrderItem();
+        orderItem.quantity = itemDto.quantity;
+        orderItem.product = { id: itemDto.productID } as Product;
+        orderItem.order = orderUpdating;
+        return orderItem;
+      });
+    } else {
+      orderUpdating.orderItems = [];
+    }
+
+    await this.orderRepository.save(orderUpdating);
+
+    // Agora buscar o pedido atualizado com todas as relações necessárias
+    const orderWithRelations = await this.orderRepository.findOne({
+      where: { id },
+      relations: [
+        'orderItems',
+        'orderItems.product',
+        'orderItems.product.category',
+        'orderItems.product.supplier',
+      ],
+    });
+
+    if (!orderWithRelations) {
+      throw new NotFoundException(
+        `Pedido ${id} não encontrado após atualização`,
+      );
+    }
+
+    return new OrderRespondeDTO(orderWithRelations);
   }
 
   remove(id: string) {
