@@ -1,26 +1,26 @@
-# Build stage
-FROM node:20 AS builder
+FROM node:20-alpine AS builder
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
-
+COPY tsconfig*.json ./
+COPY nest-cli.json ./
 COPY . .
-RUN npm run build
 
-# Production stage
-FROM node:20-alpine
+RUN npm install --legacy-peer-deps
 
-WORKDIR /usr/src/app
+# Garante o tsconfig.build.json correto
+RUN npm run build -- --config tsconfig.build.json
 
-# Copia só o package.json e instala só produção
+FROM node:20-alpine AS production
+
+WORKDIR /app
+
 COPY package*.json ./
-RUN npm install --production
-
-# Copia só a pasta dist do builder
-COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
 
 EXPOSE 8080
 
 CMD ["node", "dist/src/main"]
+

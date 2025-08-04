@@ -25,13 +25,22 @@ export class UploadService {
     });
     formData.append('product_id', uniqueFileName);
 
-    await firstValueFrom(
-      this.httpService.post(String(this.uploadApiUrl + '/upload'), formData, {
-        headers: {
-          ...formData.getHeaders(),
-          Authorization: jwt_token,
-        },
-      }),
-    );
+    try {
+      await firstValueFrom(
+        this.httpService.post(`${this.uploadApiUrl}/upload`, formData, {
+          headers: {
+            ...formData.getHeaders(),
+            Authorization: jwt_token,
+          },
+        }),
+      );
+    } catch (error) {
+      console.error(
+        '[UploadService] Erro ao enviar arquivo:',
+        error?.response?.data || error.message,
+      );
+      // ❗️ Aqui você pode apenas logar e continuar sem lançar o erro
+      // ou tomar uma ação alternativa
+    }
   }
 }

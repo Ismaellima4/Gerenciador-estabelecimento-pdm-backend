@@ -1,17 +1,55 @@
 services:
-
   backend:
-    build:
-      context: .
+    image: ge-backend:latest
     ports:
       - '8080:8080'
     environment:
-      UPLOAD_API_URL: http://localhost:3000
-      JWT_SECRET: TJ9RFNIYhU7x79+CtGQgSk7bPRe/HNWLahld36fkx18
+      UPLOAD_API_URL: http://ge-upload-file-api:3000
+      JWT_SECRET: ${JWT_SECRET}
       DB_HOST: ep-muddy-hall-acpqrzhy-pooler.sa-east-1.aws.neon.tech
       DB_USER: neondb_owner
       DB_DATABASE: neondb
       DB_PASSWORD: npg_s5H8EagezOWb
       SSL_MODE: true
       DB_PORT: 5432
-      ENV: production
+    networks:
+      - ge-network
+  minio:
+    image: minio/minio:latest
+    container_name: ge-upload-file-minio
+    ports:
+      - "9000:9000"    # API MinIO
+      - "9001:9001"    # Console web MinIO
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    volumes:
+      - ./data:/data    # Persistência local de dados MinIO
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - ge-network
+
+  rust-api:
+    image: ismaellima4/ge-upload-file:latest
+    container_name: ge-upload-file-api
+    depends_on:
+      minio:
+        condition: service_healthy # só sobe depois que o minio estiver 'healthy'
+    ports:
+      - "3000:3000"
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_SECURE: ${MINIO_SECURE}
+      JWT_SECRET: ${JWT_SECRET}
+    networks:
+      - ge-network
+
+networks:
+  ge-network:

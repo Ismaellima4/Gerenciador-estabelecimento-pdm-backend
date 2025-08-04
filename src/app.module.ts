@@ -32,4 +32,4 @@ import { HealthCheckModule } from './health-check/health-check.module';
     UserModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}
